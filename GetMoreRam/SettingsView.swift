@@ -54,6 +54,12 @@ struct SettingsView: View {
             }
             
             Section {
+                Toggle("On-device Anisette", isOn: $sharedModel.useOnDeviceAnisette)
+            } footer: {
+                Text("Generates Anisette locally on the iPhone like SideStore. The first run downloads the small ODA runtime package; authentication then goes directly to Apple without an Anisette server.")
+            }
+
+            Section {
                 HStack {
                     Text("Anisette Server URL")
                     Spacer()

@@ -10,6 +10,8 @@
 		4E9544D130558D4400540EF8 /* StosSign_API in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9544D030558D4400540EF8 /* StosSign_API */; };
 		4E9544D330558D4400540EF8 /* StosSign_Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9544D230558D4400540EF8 /* StosSign_Auth */; };
 		4E9544D530558D4400540EF8 /* StosSign_Common in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9544D430558D4400540EF8 /* StosSign_Common */; };
+		4E9544D730558D4400540EF8 /* SideSign in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9544D830558D4400540EF8 /* SideSign */; };
+		4E9544D930558D4400540EF8 /* AnisetteKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4E9544DA30558D4400540EF8 /* AnisetteKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E9544D930558D4400540EF8 /* AnisetteKit in Frameworks */,
+				4E9544D730558D4400540EF8 /* SideSign in Frameworks */,
 				4E9544D330558D4400540EF8 /* StosSign_Auth in Frameworks */,
 				4E9544D130558D4400540EF8 /* StosSign_API in Frameworks */,
 				4E9544D530558D4400540EF8 /* StosSign_Common in Frameworks */,
@@ -98,6 +102,8 @@
 				4E9544D030558D4400540EF8 /* StosSign_API */,
 				4E9544D230558D4400540EF8 /* StosSign_Auth */,
 				4E9544D430558D4400540EF8 /* StosSign_Common */,
+				4E9544D830558D4400540EF8 /* SideSign */,
+				4E9544DA30558D4400540EF8 /* AnisetteKit */,
 			);
 			productName = GetMoreRam;
 			productReference = 173496F02D847E82007994DB /* GetMoreRam.app */;
@@ -128,7 +134,9 @@
 			mainGroup = 173496E72D847E82007994DB;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				4E9544CF30558D4400540EF8 /* XCRemoteSwiftPackageReference "StosSign" */,
+				4E9544CF30558D4400540EF8 /* XCLocalSwiftPackageReference "ThirdParty/StosSign" */,
+				4E9544D630558D4400540EF8 /* XCRemoteSwiftPackageReference "SideSign" */,
+				4E9544DB30558D4400540EF8 /* XCRemoteSwiftPackageReference "AnisetteKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 173496F12D847E82007994DB /* Products */;
@@ -367,10 +375,25 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		4E9544CF30558D4400540EF8 /* XCLocalSwiftPackageReference "ThirdParty/StosSign" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ThirdParty/StosSign;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
-		4E9544CF30558D4400540EF8 /* XCRemoteSwiftPackageReference "StosSign" */ = {
+		4E9544D630558D4400540EF8 /* XCRemoteSwiftPackageReference "SideSign" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stossy11/StosSign";
+			repositoryURL = "https://github.com/SideStore/SideSign";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		4E9544DB30558D4400540EF8 /* XCRemoteSwiftPackageReference "AnisetteKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mahee96/AnisetteKit";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -381,18 +404,28 @@
 /* Begin XCSwiftPackageProductDependency section */
 		4E9544D030558D4400540EF8 /* StosSign_API */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4E9544CF30558D4400540EF8 /* XCRemoteSwiftPackageReference "StosSign" */;
+			package = 4E9544CF30558D4400540EF8 /* XCLocalSwiftPackageReference "ThirdParty/StosSign" */;
 			productName = StosSign_API;
 		};
 		4E9544D230558D4400540EF8 /* StosSign_Auth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4E9544CF30558D4400540EF8 /* XCRemoteSwiftPackageReference "StosSign" */;
+			package = 4E9544CF30558D4400540EF8 /* XCLocalSwiftPackageReference "ThirdParty/StosSign" */;
 			productName = StosSign_Auth;
 		};
 		4E9544D430558D4400540EF8 /* StosSign_Common */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4E9544CF30558D4400540EF8 /* XCRemoteSwiftPackageReference "StosSign" */;
+			package = 4E9544CF30558D4400540EF8 /* XCLocalSwiftPackageReference "ThirdParty/StosSign" */;
 			productName = StosSign_Common;
+		};
+		4E9544D830558D4400540EF8 /* SideSign */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9544D630558D4400540EF8 /* XCRemoteSwiftPackageReference "SideSign" */;
+			productName = SideSign;
+		};
+		4E9544DA30558D4400540EF8 /* AnisetteKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E9544DB30558D4400540EF8 /* XCRemoteSwiftPackageReference "AnisetteKit" */;
+			productName = AnisetteKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

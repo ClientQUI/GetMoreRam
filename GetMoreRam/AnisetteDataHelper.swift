@@ -41,7 +41,14 @@ final class AnisetteDataHelper
     
     func getAnisetteData(refresh: Bool = false) async throws -> AnisetteData
     {
-        
+        // SideStore's on-device mode executes the ADI libraries inside the
+        // app. It does not depend on an Anisette HTTP/WebSocket server.
+        if UserDefaults.standard.object(forKey: "UseOnDeviceAnisette") == nil ||
+            UserDefaults.standard.bool(forKey: "UseOnDeviceAnisette") {
+            self.printOut("Using on-device Anisette provider")
+            return try await OnDeviceAnisetteHelper.shared.getAnisetteData()
+        }
+
         if url == nil {
             throw "No Anisette Server Found!"
         }
