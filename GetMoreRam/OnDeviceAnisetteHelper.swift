@@ -37,7 +37,7 @@ final class OnDeviceAnisetteHelper {
         var identifierBytes = identifier.uuid
         let identifierData = withUnsafeBytes(of: &identifierBytes) { Data($0) }
         let requestHeaders = AnisetteRequestHeaders.defaultHeaders.with {
-            $0.clientInfo = "<PC> <Windows;6.2(0,0);9200> <com.apple.AuthKit/1 (com.apple.iTunes/12.12.4.1)>"
+            $0.clientInfo = AnisetteClientInfo.resolved(fallback: AnisetteClientInfo.onDeviceDefault)
             $0.deviceID = identifier.uuidString.uppercased()
             $0.localUserID = SHA256.hash(data: identifierData)
                 .map { String(format: "%02X", $0) }.joined()

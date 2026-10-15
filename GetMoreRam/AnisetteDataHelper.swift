@@ -343,18 +343,19 @@ final class AnisetteDataHelper
     // MARK: - V3: FETCHING
     
     func fetchClientInfo() async throws {
-        if  self.clientInfo != nil &&
-                self.userAgent != nil &&
+        self.clientInfo = AnisetteClientInfo.resolved(fallback: AnisetteClientInfo.remoteDefault)
+
+        if  self.userAgent != nil &&
                 self.mdLu != nil &&
                 self.deviceId != nil &&
                 Keychain.shared.identifier != nil {
             self.printOut("Skipping client_info fetch since all the properties we need aren't nil")
+            self.printOut("Client-Info: \(self.clientInfo!)")
             return
         }
         
         self.printOut("Using custom client_info")
                         
-        self.clientInfo = "<iMac18,3> <macOS;27.0;26A5378j> <com.apple.AuthKit/1 (com.apple.akd/1.0)>"
         self.userAgent = "AuthKit/1 (Macintosh; OS X 27.0) (com.apple.akd/1.0)"
         self.printOut("Client-Info: \(self.clientInfo!)")
         self.printOut("User-Agent: \(self.userAgent!)")

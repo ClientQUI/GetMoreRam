@@ -55,8 +55,16 @@ struct SettingsView: View {
             
             Section {
                 Toggle("On-device Anisette", isOn: $sharedModel.useOnDeviceAnisette)
+                HStack {
+                    Text("Anisette Client Info")
+                    Spacer()
+                    TextField("", text: $sharedModel.anisetteClientInfo)
+                        .multilineTextAlignment(.trailing)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                }
             } footer: {
-                Text("Generates Anisette locally on the iPhone like SideStore. The first run downloads the small ODA runtime package; authentication then goes directly to Apple without an Anisette server.")
+                Text("Generates Anisette locally on the iPhone like SideStore. The first run downloads the small ODA runtime package; authentication then goes directly to Apple without an Anisette server. Leave client info empty to use the built-in profile.")
             }
 
             Section {
