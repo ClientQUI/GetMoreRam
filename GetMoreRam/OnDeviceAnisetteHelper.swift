@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import CryptoKit
 import Security
 import AnisetteKit
 import SideSign
@@ -22,17 +23,24 @@ final class OnDeviceAnisetteHelper {
     private init() {}
 
     func getAnisetteData() async throws -> StosSign_Common.AnisetteData {
+        try convert(await getSideSignAnisetteData())
+    }
+
+    func getSideSignAnisetteData() async throws -> SideSign.AnisetteData {
         let identifier = try ensureIdentifier()
         let existingBlob = Keychain.shared.adiPb.flatMap {
             Data(base64Encoded: $0, options: .ignoreUnknownCharacters)
         }
 
-        let requestHeaders = AnisetteRequestHeaders().with {
-            // This is the client profile that works with the current GSA flow
-            // in SideStore. Keep it configurable in one place for future Apple
-            // changes instead of querying a remote /v3/client_info endpoint.
-            $0.clientInfo = "<Pixel 7> <Android;14;UQ1A.240205.002> <com.apple.AuthKit/1 (com.apple.akd/1.0)>"
-            $0.userAgent = "AuthKit/1 (Android; Android 14) (com.apple.akd/1.0)"
+        // AnisetteKit otherwise supplies a constant placeholder local-user ID.
+        // Bind LU and device ID to the same bytes used by the ADI provider.
+        var identifierBytes = identifier.uuid
+        let identifierData = withUnsafeBytes(of: &identifierBytes) { Data($0) }
+        let requestHeaders = AnisetteRequestHeaders.defaultHeaders.with {
+            $0.clientInfo = "<PC> <Windows;6.2(0,0);9200> <com.apple.AuthKit/1 (com.apple.iTunes/12.12.4.1)>"
+            $0.deviceID = identifier.uuidString.uppercased()
+            $0.localUserID = SHA256.hash(data: identifierData)
+                .map { String(format: "%02X", $0) }.joined()
         }
 
         do {
@@ -44,13 +52,14 @@ final class OnDeviceAnisetteHelper {
             if let newBlob = result.newAdiBlob {
                 Keychain.shared.adiPb = newBlob.base64EncodedString()
             }
-            return try convert(result.data)
+            return result.data
         } catch {
-            // A blob provisioned by an older/remote provider can be rejected by
-            // the local provider. Discard it once and let AnisetteKit provision
-            // a fresh local blob before returning the original error.
-            guard existingBlob != nil else { throw error }
-            Keychain.shared.adiPb = nil
+            // Only a confirmed unprovisioned ADI error warrants reprovisioning.
+            // Network/parse failures must preserve the existing identity/blob.
+            guard existingBlob != nil,
+                  let adiError = error as? AnisetteKit.AnisetteError,
+                  case .adiError(let code, _) = adiError,
+                  code == -45061 else { throw error }
             let result = try await fetch(
                 identifier: identifier,
                 existingBlob: nil,
@@ -59,7 +68,7 @@ final class OnDeviceAnisetteHelper {
             if let newBlob = result.newAdiBlob {
                 Keychain.shared.adiPb = newBlob.base64EncodedString()
             }
-            return try convert(result.data)
+            return result.data
         }
     }
 
@@ -116,7 +125,7 @@ final class OnDeviceAnisetteHelper {
         }
     }
 
-    private func convert(_ data: SideSign.AnisetteData) throws -> StosSign_Common.AnisetteData {
+    func convert(_ data: SideSign.AnisetteData) throws -> StosSign_Common.AnisetteData {
         guard let routingInfo = UInt64(data.routingInfo) else {
             throw NSError(
                 domain: "GetMoreRam.OnDeviceAnisette",
