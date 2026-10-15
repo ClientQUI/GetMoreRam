@@ -82,10 +82,23 @@ extension String: @retroactive LocalizedError {
     
 }
 
+enum AnisetteClientInfo {
+    static let defaultsKey = "AnisetteClientInfo"
+    static let onDeviceDefault = "<PC> <Windows;6.2(0,0);9200> <com.apple.AuthKit/1 (com.apple.iTunes/12.12.4.1)>"
+    static let remoteDefault = "<iMac18,3> <macOS;27.0;26A5378j> <com.apple.AuthKit/1 (com.apple.akd/1.0)>"
+
+    static func resolved(fallback: String) -> String {
+        let stored = UserDefaults.standard.string(forKey: defaultsKey)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return stored.isEmpty ? fallback : stored
+    }
+}
+
 class SharedModel: ObservableObject {
     @Published var isLogin = false
     @AppStorage("AnisetteServer") var anisetteServerURL = "https://ani.sidestore.io"
     @AppStorage("UseOnDeviceAnisette") var useOnDeviceAnisette = true
+    @AppStorage(AnisetteClientInfo.defaultsKey) var anisetteClientInfo = ""
     var session: AppleAPISession?
     var account: Account?
     var team: Team?
